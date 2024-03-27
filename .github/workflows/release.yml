@@ -1,6 +1,3 @@
-# By   Super_chen520
-# Date 2023-8-30
-
 name: Chemdah Release
 
 on:
@@ -8,6 +5,7 @@ on:
     branches: [ "rebirth" ]
   pull_request:
     branches: [ "rebirth" ]
+  workflow_dispatch: # 允许手动触发
 
 jobs:
   releaseJar:
@@ -23,30 +21,26 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-#      - name: Build with Gradle
-#        run: ./gradlew build
 
-      # First build
       - name: build
         id: build_1
         run: ./gradlew build
-      # Second build
+
       - name: build (retry 1)
         id: build_2
         if: steps.build_1.outcome == 'failure'
         run: ./gradlew build
-       # Third build
+
       - name: build (retry 2)
         id: build_3
         if: steps.build_2.outcome == 'failure'
         run: ./gradlew build
-       # Fourth build
+
       - name: build (retry 3)
         id: build_4
         if: steps.build_3.outcome == 'failure'
         run: ./gradlew build
 
-        # output jar
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3.1.2
         with:
